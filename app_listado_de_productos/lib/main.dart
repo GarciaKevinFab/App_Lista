@@ -5,6 +5,7 @@ import 'providers/products_provider.dart';
 import 'screens/cart_screen.dart';
 import './providers/cart_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter/foundation.dart';
 
 void main() {
   runApp(

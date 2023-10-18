@@ -15,13 +15,11 @@ dependencies:
   fluttertoast: ^8.2.2
   image_picker: ^0.8.4+2
   cloudinary_public: ^0.21.0
-
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   flutter_lints: ^2.0.0
 
 flutter:
@@ -30,3 +28,8 @@ flutter:
     - family: Oswald
       fonts:
         - asset: fonts/Oswald-SemiBold.ttf
+  assets:
+    - assets/icon/icon.png
+
+  
+
