@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
+import '../widgets/confirmation_dialog.dart';
 
 class CartScreen extends StatelessWidget {
   @override
@@ -20,37 +21,40 @@ class CartScreen extends StatelessWidget {
               itemCount: cart.items.length,
               itemBuilder: (context, index) {
                 return Card(
-                  color: Colors.red[100],
+                  color: Colors.white, // Cambié a blanco para mayor claridad
                   elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  margin: EdgeInsets.all(8.0),
+                  margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                   child: ListTile(
                     contentPadding:
                         EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                     title: Text(
                       cart.items[index].product.name,
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      '${cart.items[index].quantity} x ${cart.items[index].product.price}',
-                      style: TextStyle(fontSize: 14),
+                      '${cart.items[index].quantity} x \$${cart.items[index].product.price}',
+                      style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                     ),
                     trailing: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Total: ${cart.items[index].totalPrice}',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text('Total: \$${cart.items[index].totalPrice}',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red)),
                         Flexible(
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                icon: Icon(Icons.add, color: Colors.red),
+                                icon: Icon(Icons.add, color: Colors.green),
                                 onPressed: () {
-                                  cart.addItem(cart.items[index].product);
+                                  cart.addItem(
+                                      cart.items[index].product, context);
                                 },
                               ),
                               IconButton(
@@ -61,9 +65,22 @@ class CartScreen extends StatelessWidget {
                                 },
                               ),
                               IconButton(
-                                icon: Icon(Icons.delete, color: Colors.red),
+                                icon: Icon(Icons.delete, color: Colors.grey),
                                 onPressed: () {
-                                  cart.removeItem(cart.items[index].product);
+                                  showDialog(
+                                    context: context,
+                                    builder: (ctx) => ConfirmationDialog(
+                                      title: 'Eliminar producto',
+                                      message:
+                                          '¿Estás seguro de que quieres eliminar este producto del carrito?',
+                                      onConfirm: (bool value) {
+                                        if (value) {
+                                          cart.removeItem(
+                                              cart.items[index].product);
+                                        }
+                                      },
+                                    ),
+                                  );
                                 },
                               ),
                             ],
@@ -78,22 +95,22 @@ class CartScreen extends StatelessWidget {
           ),
           Container(
             padding: EdgeInsets.all(20.0),
-            color: Colors.red,
+            color: Colors.red[400], // Haciendo el rojo un poco más claro
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'Total',
                   style: TextStyle(
-                    fontSize: 20.0,
+                    fontSize: 22.0,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
                 Text(
-                  'S/${cart.totalAmount.toStringAsFixed(2)}',
+                  '\$${cart.totalAmount.toStringAsFixed(2)}',
                   style: TextStyle(
-                    fontSize: 20.0,
+                    fontSize: 22.0,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),

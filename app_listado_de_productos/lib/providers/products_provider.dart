@@ -24,6 +24,7 @@ class ProductsProvider with ChangeNotifier {
                   name: item['name'],
                   description: item['description'],
                   price: item['price'].toDouble(),
+                  stock: int.parse(item['stock'].toString()),
                 ))
             .toList();
         notifyListeners();
@@ -87,6 +88,7 @@ class ProductsProvider with ChangeNotifier {
         name: product.name,
         description: product.description,
         price: product.price,
+        stock: product.stock,
       );
 
       // Agrega el nuevo producto a la lista local

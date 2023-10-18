@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import '../models/product.dart';
 
 class CartItem {
@@ -7,7 +8,9 @@ class CartItem {
 
   CartItem({required this.product, this.quantity = 1});
 
-  double get totalPrice => product.price * quantity;
+  double get totalPrice {
+    return product.price * quantity;
+  }
 }
 
 class CartProvider with ChangeNotifier {
@@ -18,19 +21,71 @@ class CartProvider with ChangeNotifier {
   double get totalAmount {
     var total = 0.0;
     _items.forEach((item) {
-      total += item.totalPrice;
+      total += item.product.price * item.quantity;
     });
     return total;
   }
 
-  void addItem(Product product) {
+  void addItem(Product product, BuildContext context) {
     final existingItem = _items.firstWhere(
         (item) => item.product.id == product.id,
         orElse: () => CartItem(
-            product: Product(id: '', name: '', description: '', price: 0.0)));
+            product: Product(
+                id: '', name: '', description: '', price: 0.0, stock: 0)));
 
     if (existingItem.product.id != '') {
-      existingItem.quantity += 1;
+      if (existingItem.quantity < existingItem.product.stock) {
+        existingItem.quantity += 1;
+      } else {
+        // Mostrar una alerta si se alcanzó el stock disponible.
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text(
+              'Límite alcanzado', // Texto del título
+              style: TextStyle(
+                fontSize: 18, // Tamaño de fuente más grande
+                fontWeight: FontWeight.bold, // Texto en negrita
+                color: Colors.black, // Color del texto en negro
+              ),
+            ),
+            content: Text(
+              'Ya ha alcanzado la cantidad máxima en stock para este producto.',
+              style: TextStyle(
+                  color: Colors.black), // Color del contenido en negro
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  padding: EdgeInsets.all(8),
+                  child: Text(
+                    'Aceptar',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              side: BorderSide(color: Colors.red, width: 2.0),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            titleTextStyle: TextStyle(
+              color: Colors.black,
+            ),
+            contentTextStyle: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+        );
+      }
     } else {
       _items.add(CartItem(product: product));
     }

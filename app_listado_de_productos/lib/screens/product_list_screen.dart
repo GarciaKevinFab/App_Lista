@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/products_provider.dart';
 import '../widgets/product_item.dart';
-import '../screens/add_product_screen.dart';
 import '../widgets/floating_cart_button.dart';
 
 class ProductListScreen extends StatefulWidget {
@@ -67,10 +66,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
           : ListView.builder(
               itemCount: products.length,
               itemBuilder: (context, index) => ProductItem(
-                name: products[index].name,
-                price: products[index].price.toString(),
-                product: products[index],
-              ),
+                  name: products[index].name,
+                  price: products[index].price.toString(),
+                  product: products[index],
+                  stock: products[index].stock),
             ),
       floatingActionButton: FloatingCartButton(
         onPressed: () {

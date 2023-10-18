@@ -19,6 +19,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     name: '',
     description: '',
     price: 0.0,
+    stock: 0,
   );
   XFile? _pickedImage; // Variable para almacenar la imagen seleccionada
 
@@ -43,6 +44,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
       final newProduct = Product(
         name: _editedProduct.name!,
+        stock: _editedProduct.stock,
         description: _editedProduct.description!,
         price: _editedProduct.price,
       );
@@ -108,6 +110,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     name: value!,
                     description: _editedProduct.description,
                     price: _editedProduct.price,
+                    stock: _editedProduct.stock,
                     id: null,
                   );
                 },
@@ -126,6 +129,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     name: _editedProduct.name!,
                     description: value!,
                     price: _editedProduct.price,
+                    stock: _editedProduct.stock,
                     id: null,
                   );
                 },
@@ -144,6 +148,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   _editedProduct = Product(
                     name: _editedProduct.name!,
                     description: _editedProduct.description,
+                    stock: _editedProduct.stock,
                     price: double.parse(value!),
                     id: null,
                   );
@@ -169,6 +174,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   _editedProduct = Product(
                     name: _editedProduct.name!,
                     description: _editedProduct.description,
+                    stock: _editedProduct.stock,
                     price: _editedProduct.price,
                     id: null,
                   );

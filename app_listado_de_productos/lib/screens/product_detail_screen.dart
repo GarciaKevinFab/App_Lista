@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/product.dart';
-import './edit_product_screen.dart'; // Asegúrate de importar esto
+import './edit_product_screen.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   final Product product;
@@ -11,14 +11,14 @@ class ProductDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red, // Fondo rojo
+        backgroundColor: Colors.deepPurpleAccent, // Un tono más suave
         title: Text(
           product.name,
-          style: TextStyle(color: Colors.white), // Letras blancas
+          style: TextStyle(color: Colors.white, fontSize: 22),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.edit, color: Colors.white), // Ícono blanco
+            icon: Icon(Icons.edit, color: Colors.white),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (ctx) => EditProductScreen(product: product),
@@ -27,47 +27,61 @@ class ProductDetailScreen extends StatelessWidget {
           ),
         ],
         iconTheme: IconThemeData(color: Colors.white),
+        elevation: 0.0, // Remove shadow
       ),
       body: Container(
-        // Añadiendo un degradado
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blue.shade100, Colors.blue.shade300],
+            colors: [Colors.deepPurpleAccent.shade100, Colors.deepPurpleAccent],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
         ),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0), // Espaciado alrededor
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: 300, // Tamaño fijo para la imagen
+                height: 300,
                 width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: Colors.white24, // Simular una imagen con opacidad
+                ),
+                // TODO: Agregar la imagen del producto aquí cuando tengas la URL
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 25),
               Text(
                 product.name ?? '',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 15),
+              Text(
+                'Stock: ${product.stock?.toString() ?? ''}',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.white70,
+                ),
+              ),
+              SizedBox(height: 10),
               Text(
                 'Precio: \$${product.price?.toStringAsFixed(2) ?? ''}',
                 style: TextStyle(
                   fontSize: 20,
-                  color: Colors.white70,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
                 ),
               ),
               SizedBox(height: 20),
               Text(
                 product.description ?? '',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 18,
                   color: Colors.white70,
                 ),
               ),

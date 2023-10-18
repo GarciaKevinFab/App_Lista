@@ -15,24 +15,28 @@ class ConfirmationDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0), // Bordes redondeados
+        borderRadius: BorderRadius.circular(25.0),
       ),
-      elevation: 5.0, // Sombra
+      elevation: 7.0,
       backgroundColor: Colors.transparent,
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color.fromARGB(255, 255, 0, 0),
-              Colors.blue
-            ], // Fondo de degradado
+            colors: [Colors.red[600]!, Colors.red[400]!], // Degradado suave
             stops: [0.0, 1.0],
           ),
-          borderRadius: BorderRadius.circular(20.0),
+          borderRadius: BorderRadius.circular(25.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 15,
+              spreadRadius: 5,
+            )
+          ],
         ),
-        padding: EdgeInsets.all(20.0),
+        padding: EdgeInsets.symmetric(vertical: 30.0, horizontal: 25.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
@@ -40,48 +44,59 @@ class ConfirmationDialog extends StatelessWidget {
               title,
               style: TextStyle(
                 color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 22.0,
+                fontWeight: FontWeight.w600,
+                fontSize: 24.0,
               ),
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: 25.0),
             Text(
               message,
               style: TextStyle(
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withOpacity(0.9),
                 fontSize: 18.0,
+                fontWeight: FontWeight.w400,
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: 30.0),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 ElevatedButton(
                   onPressed: () {
-                    onConfirm(false); // No confirmar
+                    onConfirm(false);
                     Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.red, // Color de fondo del botón
+                    primary: Colors.grey,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+                      borderRadius: BorderRadius.circular(20.0),
                     ),
+                    shadowColor: Colors.black45,
+                    elevation: 5,
                   ),
-                  child: Text('No'),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Text('No', style: TextStyle(fontSize: 18.0)),
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    onConfirm(true); // Sí, confirmar
+                    onConfirm(true);
                     Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.green, // Color de fondo del botón
+                    primary: Colors.green,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+                      borderRadius: BorderRadius.circular(20.0),
                     ),
+                    shadowColor: Colors.black45,
+                    elevation: 5,
                   ),
-                  child: Text('Sí'),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Text('Sí', style: TextStyle(fontSize: 18.0)),
+                  ),
                 ),
               ],
             ),

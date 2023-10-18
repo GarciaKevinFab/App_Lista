@@ -4,6 +4,7 @@ import 'screens/product_list_screen.dart';
 import 'providers/products_provider.dart';
 import 'screens/cart_screen.dart';
 import './providers/cart_provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 void main() {
   runApp(
@@ -18,7 +19,9 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({Key? key}) : super(key: key);
+
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +31,8 @@ class MyApp extends StatelessWidget {
         '/': (ctx) => ProductListScreen(),
         '/cartScreen': (ctx) => CartScreen(),
       },
+      builder: FToastBuilder(),
+      navigatorKey: navigatorKey,
     );
   }
 }

@@ -24,6 +24,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     name: '',
     description: '',
     price: 0.0,
+    stock: 0,
   );
 
   @override
@@ -96,6 +97,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   _editedProduct = Product(
                     name: _nameController.text,
                     description: _editedProduct.description,
+                    stock: _editedProduct.stock,
                     price: _editedProduct.price,
                     id: _editedProduct.id,
                   );
@@ -115,6 +117,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   _editedProduct = Product(
                     name: _editedProduct.name,
                     description: _descriptionController.text,
+                    stock: _editedProduct.stock,
                     price: _editedProduct.price,
                     id: _editedProduct.id,
                   );
@@ -135,6 +138,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   _editedProduct = Product(
                     name: _editedProduct.name,
                     description: _editedProduct.description,
+                    stock: _editedProduct.stock,
                     price: double.parse(_priceController.text),
                     id: _editedProduct.id,
                   );
