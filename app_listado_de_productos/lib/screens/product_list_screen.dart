@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/products_provider.dart';
 import '../widgets/product_item.dart';
 import '../widgets/floating_cart_button.dart';
+import '../widgets/products_search.dart';
 
 class ProductListScreen extends StatefulWidget {
   @override
@@ -57,9 +58,20 @@ class _ProductListScreenState extends State<ProductListScreen> {
       appBar: AppBar(
         backgroundColor: Colors.red,
         title: Text(
-          'BODEGA ROCKET',
+          'ROCKET STORE',
           style: TextStyle(color: Colors.white),
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: ProductsSearch(productsData.products),
+              );
+            },
+          ),
+        ],
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
