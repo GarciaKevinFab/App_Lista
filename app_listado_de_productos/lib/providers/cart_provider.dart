@@ -42,17 +42,16 @@ class CartProvider with ChangeNotifier {
           context: context,
           builder: (ctx) => AlertDialog(
             title: Text(
-              'Límite alcanzado', // Texto del título
+              'Límite alcanzado',
               style: TextStyle(
-                fontSize: 18, // Tamaño de fuente más grande
-                fontWeight: FontWeight.bold, // Texto en negrita
-                color: Colors.black, // Color del texto en negro
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
             content: Text(
               'Ya ha alcanzado la cantidad máxima en stock para este producto.',
-              style: TextStyle(
-                  color: Colors.black), // Color del contenido en negro
+              style: TextStyle(color: Colors.black),
             ),
             actions: <Widget>[
               TextButton(

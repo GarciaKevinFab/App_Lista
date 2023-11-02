@@ -16,17 +16,13 @@ class ConfirmationDialog extends StatelessWidget {
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(25.0),
+        side: BorderSide(color: Colors.red, width: 2.0), // Borde rojo
       ),
       elevation: 7.0,
       backgroundColor: Colors.transparent,
       child: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Colors.red[600]!, Colors.red[400]!], // Degradado suave
-            stops: [0.0, 1.0],
-          ),
+          color: Colors.white, // Fondo blanco
           borderRadius: BorderRadius.circular(25.0),
           boxShadow: [
             BoxShadow(
@@ -43,8 +39,8 @@ class ConfirmationDialog extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
+                color: Colors.black, // Letras negras
+                fontWeight: FontWeight.bold, // Título en negrita
                 fontSize: 24.0,
               ),
             ),
@@ -52,7 +48,7 @@ class ConfirmationDialog extends StatelessWidget {
             Text(
               message,
               style: TextStyle(
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.black, // Letras negras
                 fontSize: 18.0,
                 fontWeight: FontWeight.w400,
               ),
@@ -68,7 +64,7 @@ class ConfirmationDialog extends StatelessWidget {
                     Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.grey,
+                    primary: Colors.red, // Botón rojo
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
@@ -77,7 +73,8 @@ class ConfirmationDialog extends StatelessWidget {
                   ),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Text('No', style: TextStyle(fontSize: 18.0)),
+                    child: Text('No',
+                        style: TextStyle(fontSize: 18.0, color: Colors.white)),
                   ),
                 ),
                 ElevatedButton(
@@ -86,7 +83,7 @@ class ConfirmationDialog extends StatelessWidget {
                     Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.green,
+                    primary: Colors.green, // Botón verde
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
@@ -95,7 +92,8 @@ class ConfirmationDialog extends StatelessWidget {
                   ),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Text('Sí', style: TextStyle(fontSize: 18.0)),
+                    child: Text('Sí',
+                        style: TextStyle(fontSize: 18.0, color: Colors.white)),
                   ),
                 ),
               ],

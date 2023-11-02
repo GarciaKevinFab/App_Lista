@@ -21,23 +21,24 @@ class CartScreen extends StatelessWidget {
               itemCount: cart.items.length,
               itemBuilder: (context, index) {
                 return Card(
-                  color: Colors.white, // Cambié a blanco para mayor claridad
-                  elevation: 5,
+                  color: Colors.white,
+                  elevation: 8,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                  margin:
+                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
                   child: ListTile(
                     contentPadding:
-                        EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                        EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                     title: Text(
                       cart.items[index].product.name,
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
                       '${cart.items[index].quantity} x \$${cart.items[index].product.price}',
-                      style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                      style: TextStyle(fontSize: 18, color: Colors.grey[800]),
                     ),
                     trailing: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -45,7 +46,7 @@ class CartScreen extends StatelessWidget {
                         Text('Total: \$${cart.items[index].totalPrice}',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.red)),
+                                color: Colors.red[800])),
                         Flexible(
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -65,7 +66,8 @@ class CartScreen extends StatelessWidget {
                                 },
                               ),
                               IconButton(
-                                icon: Icon(Icons.delete, color: Colors.grey),
+                                icon:
+                                    Icon(Icons.delete, color: Colors.grey[700]),
                                 onPressed: () {
                                   showDialog(
                                     context: context,
@@ -93,31 +95,66 @@ class CartScreen extends StatelessWidget {
               },
             ),
           ),
-          Container(
-            padding: EdgeInsets.all(20.0),
-            color: Colors.red[400], // Haciendo el rojo un poco más claro
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Total',
-                  style: TextStyle(
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+          if (cart.items.isNotEmpty)
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 15.0),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.red[400]!, Colors.red[600]!],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
-                Text(
-                  '\$${cart.totalAmount.toStringAsFixed(2)}',
-                  style: TextStyle(
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Total',
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        '\$${cart.totalAmount.toStringAsFixed(2)}',
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                  Divider(
+                    // Esta es la línea divisoria que he agregado
+                    color: Colors.white,
+                    thickness: 2.0,
+                    height: 20.0,
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.white,
+                      onPrimary: Colors.red[600],
+                      textStyle: TextStyle(fontSize: 20),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        side: BorderSide(color: Colors.red[600]!, width: 2),
+                      ),
+                    ),
+                    child: Text('PAGAR'),
+                    onPressed: () {
+                      // Logic for payment processing
+                      Navigator.of(context).pushNamed('/paymentScreen');
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
         ],
       ),
     );

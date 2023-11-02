@@ -81,20 +81,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red, // Fondo rojo
+        backgroundColor: Colors.red,
         title: Text(
           'Agregar Producto',
-          style: TextStyle(color: Colors.white), // Letras blancas
+          style: TextStyle(color: Colors.white),
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.save, color: Colors.white), // Ícono blanco
+            icon: Icon(Icons.save, color: Colors.white),
             onPressed: _saveForm,
           )
         ],
-        iconTheme: IconThemeData(
-            color: Colors
-                .white), // Esto asegura que todos los íconos en la AppBar sean blancos
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

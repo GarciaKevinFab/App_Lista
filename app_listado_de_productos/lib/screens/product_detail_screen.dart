@@ -100,7 +100,7 @@ class ProductDetailScreen extends StatelessWidget {
               ),
               SizedBox(height: 25),
               Text(
-                product.name ?? '',
+                product.name,
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -111,7 +111,7 @@ class ProductDetailScreen extends StatelessWidget {
               Divider(thickness: 1, color: Colors.grey.shade300),
               SizedBox(height: 15),
               Text(
-                'Stock: ${product.stock?.toString() ?? ''}',
+                'Stock: ${product.stock.toString()}',
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.black54,
@@ -119,16 +119,16 @@ class ProductDetailScreen extends StatelessWidget {
               ),
               SizedBox(height: 10),
               Text(
-                'Precio: \$${product.price?.toStringAsFixed(2) ?? ''}',
+                'Precio: \$${product.price.toStringAsFixed(2)}',
                 style: TextStyle(
-                  fontSize: 24, // Aumentamos el tamaño del precio
+                  fontSize: 24,
                   fontWeight: FontWeight.w600,
                   color: Colors.black87,
                 ),
               ),
               SizedBox(height: 20),
               Text(
-                product.description ?? '',
+                product.description,
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.black54,
@@ -141,11 +141,10 @@ class ProductDetailScreen extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   primary: Colors.red,
                   onPrimary: Colors.white,
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 70, vertical: 20), // Más prominente
-                  textStyle: TextStyle(fontSize: 20), // Más grande
+                  padding: EdgeInsets.symmetric(horizontal: 70, vertical: 20),
+                  textStyle: TextStyle(fontSize: 20),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10), // Más redondeado
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
