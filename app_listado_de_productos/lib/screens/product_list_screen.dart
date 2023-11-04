@@ -12,41 +12,42 @@ class ProductListScreen extends StatefulWidget {
 
 class _ProductListScreenState extends State<ProductListScreen> {
   bool _isLoading = false;
+  ScrollController _scrollController =
+      ScrollController(); // Controlador de desplazamiento
 
   @override
   void initState() {
     super.initState();
-    // Establecer el estado de carga y llamar al proveedor
-    setState(() {
-      _isLoading = true;
-    });
-    Provider.of<ProductsProvider>(context, listen: false)
-        .fetchAndSetProducts()
-        .then((_) {
+    _loadProducts();
+    _scrollController.addListener(_onScroll); // Agregar el listener
+  }
+
+  void _loadProducts({bool nextPage = false}) async {
+    if (!_isLoading) {
+      setState(() {
+        _isLoading = true;
+      });
+      await Provider.of<ProductsProvider>(context, listen: false)
+          .fetchAndSetProducts(nextPage: nextPage);
       setState(() {
         _isLoading = false;
       });
-    }).catchError((error) {
-      // Manejo de errores básico, puede ser mejorado
-      setState(() {
-        _isLoading = false;
-      });
-      showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text('Ocurrió un error'),
-          content: Text('Algo salió mal al cargar los productos.'),
-          actions: [
-            TextButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(ctx).pop();
-              },
-            )
-          ],
-        ),
-      );
-    });
+    }
+  }
+
+  void _onScroll() {
+    // Comprobar si estamos cerca del final de la lista
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 100) {
+      _loadProducts(nextPage: true);
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll); // Eliminar el listener
+    _scrollController.dispose(); // Limpiar el controlador
+    super.dispose();
   }
 
   @override
@@ -57,31 +58,30 @@ class _ProductListScreenState extends State<ProductListScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.red,
-        title: Text(
-          'ROCKET STORE',
-          style: TextStyle(color: Colors.white),
-        ),
+        title: Text('ROCKET STORE', style: TextStyle(color: Colors.white)),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
               showSearch(
                 context: context,
-                delegate: ProductsSearch(productsData.products),
+                delegate: ProductsSearch(products),
               );
             },
           ),
         ],
       ),
-      body: _isLoading
+      body: _isLoading && products.isEmpty
           ? Center(child: CircularProgressIndicator())
           : ListView.builder(
+              controller: _scrollController,
               itemCount: products.length,
-              itemBuilder: (context, index) => ProductItem(
-                  name: products[index].name,
-                  price: products[index].price.toString(),
-                  product: products[index],
-                  stock: products[index].stock),
+              itemBuilder: (ctx, i) => ProductItem(
+                name: products[i].name,
+                price: products[i].price.toString(),
+                product: products[i],
+                stock: products[i].stock,
+              ),
             ),
       floatingActionButton: FloatingCartButton(
         onPressed: () {

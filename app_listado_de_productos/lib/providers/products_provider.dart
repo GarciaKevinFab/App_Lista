@@ -7,18 +7,22 @@ import 'package:image_picker/image_picker.dart';
 
 class ProductsProvider with ChangeNotifier {
   List<Product> _products = [];
+  int _currentPage = 1;
+  final int _itemsPerPage = 7;
 
   List<Product> get products {
     return [..._products];
   }
 
-  Future<void> fetchAndSetProducts() async {
-    final url = 'https://shop-api-roan.vercel.app/product';
+  Future<void> fetchAndSetProducts({bool nextPage = false}) async {
+    if (nextPage) _currentPage++;
+
+    final url = 'https://shop-api-roan.vercel.app/product?page=$_currentPage';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final extractedData = json.decode(response.body) as List<dynamic>;
-        _products = extractedData
+        final List<Product> loadedProducts = extractedData
             .map((item) => Product(
                   id: item['id'],
                   name: item['name'],
@@ -27,6 +31,11 @@ class ProductsProvider with ChangeNotifier {
                   stock: int.parse(item['stock'].toString()),
                 ))
             .toList();
+        if (nextPage) {
+          _products.addAll(loadedProducts);
+        } else {
+          _products = loadedProducts;
+        }
         notifyListeners();
       } else {
         throw Exception('Failed to load products');
@@ -36,7 +45,6 @@ class ProductsProvider with ChangeNotifier {
     }
   }
 
-// ...
   Future<String> uploadImageToServer(XFile? pickedImage) async {
     try {
       final url =
