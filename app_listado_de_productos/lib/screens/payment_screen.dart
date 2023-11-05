@@ -6,8 +6,8 @@ import 'package:geocoding/geocoding.dart';
 import 'dart:io';
 import '../providers/newOrder_provider.dart';
 import '../providers/cart_provider.dart';
-import '../widgets/direction_widget.dart';
-import '../widgets/photo_widget.dart';
+import '../widgets/MapScreen .dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class PaymentScreen extends StatefulWidget {
   @override
@@ -22,6 +22,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   double? _userLng;
   File? _pickedImage;
   String? _address;
+  String? _staticMapImageUrl;
+  LatLng? _selectedLocation;
 
   final _picker = ImagePicker();
   NewOrderProvider? newOrderProvider;
@@ -30,7 +32,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Inicializa newOrderProvider aquí
     newOrderProvider = Provider.of<NewOrderProvider>(context, listen: false);
   }
 
@@ -50,10 +51,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
       return 'Este campo es requerido';
     }
     if (!RegExp(r"^[a-zA-Z ]+$").hasMatch(value)) {
-      // Asegúrate de permitir espacios para nombres compuestos
       return 'Ingresa un nombre válido (solo letras y espacios)';
     }
-    return null; // Debes retornar null para indicar que no hay error
+    return null;
   }
 
   String? _validatePhoneNumber(String? value) {
@@ -63,7 +63,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     if (!RegExp(r"^\d{9}$").hasMatch(value)) {
       return 'Ingresa un número de teléfono válido de 9 dígitos';
     }
-    return null; // Debes retornar null para indicar que no hay error
+    return null;
   }
 
   Future<void> _takePicture() async {
@@ -72,19 +72,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     setState(() {
       _pickedImage = File(imageFile.path);
-    });
-  }
-
-  Future<void> _getLocation() async {
-    final location = loc.Location();
-    final currentLocation = await location.getLocation();
-    _userLat = currentLocation.latitude;
-    _userLng = currentLocation.longitude;
-    _getAddress(currentLocation.latitude!, currentLocation.longitude!)
-        .then((address) {
-      setState(() {
-        _address = address;
-      });
     });
   }
 
@@ -112,6 +99,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
+  String getStaticMapImageUrl(LatLng location) {
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=${location.latitude},${location.longitude}&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7C${location.latitude},${location.longitude}&key=AIzaSyDb-kDpLkV7zo0r8s114Tj5mChTvKkJUhc';
+  }
+
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<CartProvider>(context);
@@ -125,9 +116,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Form(
-            // This is added to integrate the Form widget
-            key: _formKey, // Assign the global key to the form
-
+            key: _formKey,
             child: Column(
               children: [
                 // Voucher de Resumen de Compra
@@ -202,12 +191,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   elevation: 8,
                   color: Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        15), // Aumento del radio para suavizar las esquinas
+                    borderRadius: BorderRadius.circular(15),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(
-                        20.0), // Aumento del padding para más espacio interior
+                    padding: const EdgeInsets.all(20.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -261,41 +248,101 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               _validatePhoneNumber, // Agrega la validación
                         ),
                         SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey[800] ?? Colors.grey,
-                                  ), // Color más claro para el borde
-                                  borderRadius: BorderRadius.circular(10),
+                        //Widgets
+                        Container(
+                          // El contenedor principal que mantiene tus widgets
+                          child: Column(
+                            // Columna principal para organizar los widgets verticalmente
+                            children: [
+                              InkWell(
+                                // Widget para capturar la imagen
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  topRight: Radius.circular(10),
                                 ),
-                                child: PhotoWidget(
-                                  image: _pickedImage,
-                                  onTap: _takePicture,
+                                onTap: _takePicture,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: _pickedImage != null
+                                      ? Image.file(_pickedImage!)
+                                      : Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.camera_alt,
+                                              size: 50,
+                                              color: Colors.grey.shade600,
+                                            ),
+                                            SizedBox(height: 8),
+                                            Text(
+                                              'Foto de la fachada',
+                                              style: TextStyle(
+                                                color: Colors.grey.shade800,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                 ),
                               ),
-                            ),
-                            SizedBox(width: 15),
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey[800] ?? Colors.grey,
+                              Divider(
+                                  height: 20,
+                                  thickness: 1), // Separador entre los widgets
+                              InkWell(
+                                // Widget para seleccionar la ubicación
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(10),
+                                  bottomRight: Radius.circular(10),
+                                ),
+                                onTap: () async {
+                                  final LatLng? selectedLocation =
+                                      await Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => MapScreen(),
+                                    ),
+                                  );
+
+                                  if (selectedLocation != null) {
+                                    setState(() {
+                                      _selectedLocation = selectedLocation;
+                                      _staticMapImageUrl = getStaticMapImageUrl(
+                                          selectedLocation);
+                                    });
+                                  }
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.location_on,
+                                        size: 24,
+                                        color: Colors.grey.shade600,
+                                      ),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                        child: _selectedLocation != null
+                                            ? Image.network(_staticMapImageUrl!)
+                                            : Text(
+                                                _address ??
+                                                    'Obtener mi dirección',
+                                                style: TextStyle(
+                                                  color: Colors.grey.shade800,
+                                                  fontSize: 16,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                      ),
+                                    ],
                                   ),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                padding: const EdgeInsets.all(10.0),
-                                child: DirectionWidget(
-                                  address: _address,
-                                  onTap: _getLocation,
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
+
+                        //Boton Compra
                         SizedBox(height: 25),
                         Center(
                           child: ElevatedButton(
@@ -316,7 +363,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                             'amount': cartItem.quantity,
                                           })
                                       .toList(),
-                                  // Otros datos que necesites enviar
                                 };
                                 print('Datos de la orden: $orderData');
                                 if (newOrderProvider != null) {

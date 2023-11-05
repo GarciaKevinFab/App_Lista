@@ -61,8 +61,29 @@ class CartScreen extends StatelessWidget {
                               IconButton(
                                 icon: Icon(Icons.remove, color: Colors.red),
                                 onPressed: () {
-                                  cart.removeSingleItem(
-                                      cart.items[index].product);
+                                  // Suponiendo que tienes una manera de saber la cantidad actual del producto
+                                  int currentQuantity =
+                                      cart.items[index].quantity;
+                                  // Verificar si la cantidad actual es 1 antes de quitar
+                                  if (currentQuantity == 1) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (ctx) => ConfirmationDialog(
+                                        title: 'Quitar producto',
+                                        message:
+                                            'Este es el último elemento. ¿Estás seguro de que quieres eliminar este producto del carrito?',
+                                        onConfirm: (bool value) {
+                                          if (value) {
+                                            cart.removeSingleItem(
+                                                cart.items[index].product);
+                                          }
+                                        },
+                                      ),
+                                    );
+                                  } else {
+                                    cart.removeSingleItem(
+                                        cart.items[index].product);
+                                  }
                                 },
                               ),
                               IconButton(
