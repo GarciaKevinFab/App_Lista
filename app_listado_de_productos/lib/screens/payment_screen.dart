@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:location/location.dart' as loc;
 import 'package:image_picker/image_picker.dart';
 import 'package:geocoding/geocoding.dart';
 import 'dart:io';
@@ -8,6 +7,7 @@ import '../providers/newOrder_provider.dart';
 import '../providers/cart_provider.dart';
 import '../widgets/MapScreen .dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../../env.dart';
 
 class PaymentScreen extends StatefulWidget {
   @override
@@ -100,7 +100,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   String getStaticMapImageUrl(LatLng location) {
-    return 'https://maps.googleapis.com/maps/api/staticmap?center=${location.latitude},${location.longitude}&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7C${location.latitude},${location.longitude}&key=AIzaSyDb-kDpLkV7zo0r8s114Tj5mChTvKkJUhc';
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=${location.latitude},${location.longitude}&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7C${location.latitude},${location.longitude}&key=${Env.GOOGLE_MAPS_API_KEY}';
   }
 
   @override
@@ -301,12 +301,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                       builder: (context) => MapScreen(),
                                     ),
                                   );
-
                                   if (selectedLocation != null) {
+                                    // Realiza la operación asíncrona fuera de setState()
+                                    _staticMapImageUrl =
+                                        getStaticMapImageUrl(selectedLocation);
+                                    double lat = selectedLocation.latitude;
+                                    double lon = selectedLocation.longitude;
+                                    String address = await _getAddress(lat,
+                                        lon); // Espera a que se complete la operación asíncrona
+
+                                    // Luego actualiza el estado con los nuevos valores
                                     setState(() {
                                       _selectedLocation = selectedLocation;
-                                      _staticMapImageUrl = getStaticMapImageUrl(
-                                          selectedLocation);
+                                      _address =
+                                          address; // Actualiza la dirección
+                                      _userLat = lat; // Actualiza la latitud
+                                      _userLng = lon; // Actualiza la longitud
                                     });
                                   }
                                 },

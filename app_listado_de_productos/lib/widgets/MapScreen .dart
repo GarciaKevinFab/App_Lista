@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import '../../env.dart';
 
 class MapScreen extends StatefulWidget {
   @override
@@ -27,7 +28,7 @@ class _MapScreenState extends State<MapScreen> {
 
   void _updateStaticMapUrl(LatLng position) {
     _staticMapUrl =
-        'https://maps.googleapis.com/maps/api/staticmap?center=${position.latitude},${position.longitude}&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7C${position.latitude},${position.longitude}&key=TU_API_KEY';
+        'https://maps.googleapis.com/maps/api/staticmap?center=${position.latitude},${position.longitude}&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7C${position.latitude},${position.longitude}&key=${Env.GOOGLE_MAPS_API_KEY}';
   }
 
   Future<void> _determinePosition() async {
